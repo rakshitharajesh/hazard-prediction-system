@@ -1,0 +1,278 @@
+<!-- mobile_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Hazards - Mobile App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        
+.bitcount-prop-single-ink {
+  font-family: "Bitcount Prop Single Ink", system-ui;
+  font-optical-sizing: auto;
+  font-weight: heavy;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "CRSV" 0.5,
+    "ELSH" 0,
+    "ELXP" 0,
+    "SZP1" 0,
+    "SZP2" 0,
+    "XPN1" 0,
+    "XPN2" 0,
+    "YPN1" 0,
+    "YPN2" 0;
+}
+        :root {
+            --primary: #3498db;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --safe: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), #dff2fe);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .app-content {
+            margin-top: 80px;
+            padding: 15px;
+            padding-bottom: 80px;
+        }
+        
+        .alert-banner {
+            background: var(--danger);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        .risk-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .risk-meter {
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .risk-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .emergency-btn {
+            background: var(--danger);
+        }
+        
+        .map-preview {
+            height: 200px;
+            background: #ddd;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: #666;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="bitcount-prop-single-ink" style="border:20px white">
+    <div class="app-header">
+        <h1>Chennai Hazards</h1>
+        <p>Real-time Urban Risk Monitoring</p>
+    </div>
+    
+    <div class="app-content">
+        <div class="alert-banner" id="alertBanner" style="display: none;">
+            <h3>🚨 Emergency Alert</h3>
+            <p id="alertMessage">High risk detected in your area</p>
+        </div>
+        
+        <div class="risk-card">
+            <h3>📍 Your Location Risk</h3>
+            <div class="risk-meter">
+                <div class="risk-fill" id="overallRisk" style="width: 65%; background: var(--warning);"></div>
+            </div>
+            <p>Overall Risk: <span id="riskValue">65%</span> (Moderate)</p>
+        </div>
+        
+        <div class="risk-card">
+            <h3>🔥 Heat Risk</h3>
+            <div class="risk-meter">
+                <div class="risk-fill" style="width: 75%; background: var(--warning);"></div>
+            </div>
+            <p>75% - Stay hydrated, avoid direct sun</p>
+        </div>
+        
+        <div class="risk-card">
+            <h3>🌫️ Air Quality</h3>
+            <div class="risk-meter">
+                <div class="risk-fill" style="width: 60%; background: var(--warning);"></div>
+            </div>
+            <p>AQI: 156 - Moderate health concern</p>
+        </div>
+        
+        <div class="risk-card">
+            <h3>🌊 Flood Risk</h3>
+            <div class="risk-meter">
+                <div class="risk-fill" style="width: 30%; background: var(--safe);"></div>
+            </div>
+            <p>30% - Low risk, monitor updates</p>
+        </div>
+        
+        <div class="quick-actions">
+            <button class="action-btn" onclick="showEvacuationRoutes()">🚶 Evacuation Routes</button>
+            <button class="action-btn" onclick="showShelters()">🏠 Nearby Shelters</button>
+            <button class="action-btn emergency-btn" onclick="callEmergency()">🚨 Emergency Call</button>
+            <button class="action-btn" onclick="shareStatus()">📤 Share Status</button>
+        </div>
+        
+        <div class="map-preview">
+            <p>🗺️ Interactive Risk Map</p>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <div class="nav-item active">🏠 Home</div>
+        <div class="nav-item">🗺️ Map</div>
+        <div class="nav-item">📊 Analytics</div>
+        <div class="nav-item">⚙️ Settings</div>
+    </div>
+
+    <script>
+        // WebSocket connection for real-time updates
+        const ws = new WebSocket('ws://localhost:8765');
+        
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            updateDashboard(data.data);
+        };
+        
+        function updateDashboard(hazardData) {
+            // Update risk indicators
+            document.getElementById('overallRisk').style.width = hazardData.heat_risk.current + '%';
+            document.getElementById('riskValue').textContent = hazardData.heat_risk.current + '%';
+            
+            // Show alerts if risk is high
+            if (hazardData.heat_risk.current > 70) {
+                document.getElementById('alertBanner').style.display = 'block';
+                document.getElementById('alertMessage').textContent = 
+                    `High heat risk (${hazardData.heat_risk.current}%) detected in your area.`;
+            }
+        }
+        
+        function showEvacuationRoutes() {
+            alert('Showing evacuation routes to nearest safe zones...');
+        }
+        
+        function showShelters() {
+            alert('Displaying nearby emergency shelters...');
+        }
+        
+        function callEmergency() {
+            if (confirm('Call emergency services?')) {
+                alert('Emergency services notified. Help is on the way!');
+            }
+        }
+        
+        function shareStatus() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Safety Status',
+                    text: 'I am safe. Current risk level: Moderate',
+                    url: window.location.href
+                });
+            } else {
+                alert('Status copied to clipboard');
+            }
+        }
+        
+        // Simulate initial data
+        setTimeout(() => {
+            updateDashboard({
+                heat_risk: { current: 68 },
+                air_quality: { current_aqi: 156 },
+                flood_risk: { current: 28 }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>
