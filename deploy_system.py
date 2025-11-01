@@ -40,7 +40,6 @@ def open_browser_dashboards():
     
     dashboards = [
         "http://localhost:8000/dashboard.html",
-        "http://localhost:8000/mobile_dashboard.html",
         "http://localhost:8000/cesium_map/index.html"
     ]
     
@@ -80,7 +79,6 @@ def main():
     print("\n🎉 SYSTEM DEPLOYMENT COMPLETE!")
     print("=" * 60)
     print("📊 Main Dashboard: http://localhost:8000/dashboard.html")
-    print("📱 Mobile Interface: http://localhost:8000/mobile_dashboard.html")
     print("🌍 3D Digital Twin: http://localhost:8000/cesium_map/index.html")
     print("🔗 Real-time API: ws://localhost:8765")
     print("\nPress Ctrl+C to stop all services")
